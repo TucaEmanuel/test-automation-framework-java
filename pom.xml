@@ -11,14 +11,36 @@
     <name>Test Automation Framework</name>
     <description>Test automation framework using Java, Selenium, JUnit 5 and Cucumber</description>
 
+    <dependencyManagement>
+        <dependencies>
+            <!-- Force JUnit Platform version alignment (CRITICAL) -->
+            <dependency>
+                <groupId>org.junit.platform</groupId>
+                <artifactId>junit-platform-commons</artifactId>
+                <version>${junit.platform.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.junit.platform</groupId>
+                <artifactId>junit-platform-engine</artifactId>
+                <version>${junit.platform.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.junit.platform</groupId>
+                <artifactId>junit-platform-launcher</artifactId>
+                <version>${junit.platform.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <selenium.version>4.31.0</selenium.version>
-        <junit.version>5.10.5</junit.version>
-        <cucumber.version>7.34.2</cucumber.version>
+        <selenium.version>4.40.0</selenium.version>
+        <junit.version>5.11.0</junit.version>
+        <junit.platform.version>1.11.0</junit.platform.version>
+        <cucumber.version>7.18.0</cucumber.version>
         <surefire.version>3.2.5</surefire.version>
         <compiler.plugin.version>3.11.0</compiler.plugin.version>
         <slf4j.version>2.0.13</slf4j.version>
@@ -32,7 +54,7 @@
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-java</artifactId>
-            <version>4.40.0</version>
+            <version>${selenium.version}</version>
             <scope>compile</scope>
         </dependency>
 
@@ -40,7 +62,7 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
-            <version>6.0.2</version>
+            <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
 
@@ -48,14 +70,21 @@
         <dependency>
             <groupId>io.cucumber</groupId>
             <artifactId>cucumber-java</artifactId>
-            <version>7.34.3</version>
+            <version>${cucumber.version}</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>io.cucumber</groupId>
             <artifactId>cucumber-junit-platform-engine</artifactId>
-            <version>7.34.3</version>
+            <version>${cucumber.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>io.cucumber</groupId>
+            <artifactId>cucumber-picocontainer</artifactId>
+            <version>${cucumber.version}</version>
             <scope>test</scope>
         </dependency>
 
@@ -64,7 +93,7 @@
         <dependency>
             <groupId>org.junit.platform</groupId>
             <artifactId>junit-platform-suite</artifactId>
-            <version>6.1.0-M1</version>
+            <version>${junit.platform.version}</version>
             <scope>test</scope>
         </dependency>
 
@@ -95,12 +124,19 @@
             <scope>compile</scope>
         </dependency>
 
-<!--        <dependency>-->
-<!--            <groupId>io.github.bonigarcia</groupId>-->
-<!--            <artifactId>webdrivermanager</artifactId>-->
-<!--            <version>6.3.3</version>-->
-<!--            <scope>compile</scope>-->
-<!--        </dependency>-->
+        <dependency>
+            <groupId>io.github.bonigarcia</groupId>
+            <artifactId>webdrivermanager</artifactId>
+            <version>6.3.3</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-engine</artifactId>
+            <version>${junit.platform.version}</version>
+            <scope>test</scope>
+        </dependency>
 
     </dependencies>
 
