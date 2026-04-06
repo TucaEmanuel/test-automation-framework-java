@@ -193,3 +193,4 @@ If creating step definitions in NEW package, update RunCucumberTest glue paramet
 - `src/main/java/.../ui/pages/*.java`: Page objects with locators and actions
 - `src/test/java/.../bdd/stepdefinitions/*.java`: Gherkin step implementations
 - `src/test/resources/features/*.feature`: Cucumber scenarios
+

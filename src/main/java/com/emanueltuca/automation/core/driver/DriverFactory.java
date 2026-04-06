@@ -5,36 +5,51 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
-import static com.emanueltuca.automation.core.config.Config.getBrowser;
+import java.time.Duration;
+
+import static com.emanueltuca.automation.core.config.ConfigReader.*;
 
 public class DriverFactory {
-    private static ThreadLocal<WebDriver> driver = new ThreadLocal<>();
+    private static final ThreadLocal<WebDriver> DRIVER = new ThreadLocal<>();
 
-    public void initializeDriver() {
+    public static void initializeDriver() {
         String browser = getBrowser();
         switch (browser.toLowerCase()) {
             case "chrome":
                 WebDriverManager.chromedriver().setup();
-                driver.set(new ChromeDriver());
+                DRIVER.set(new ChromeDriver(BrowserOptions.getChromeOptions()));
                 break;
             case "firefox":
                 WebDriverManager.firefoxdriver().setup();
-                driver.set(new FirefoxDriver());
+                DRIVER.set(new FirefoxDriver(BrowserOptions.getFirefoxOptions()));
                 break;
             default:
                 throw new IllegalArgumentException("Unsupported browser: " + browser);
         }
         getDriver().manage().window().maximize();
+        getDriver().manage().timeouts().implicitlyWait(Duration.ZERO);
+        getDriver().manage().timeouts().pageLoadTimeout(Duration.ofSeconds(getPageTimeout()));
+
+        if (!isHeadless()) {
+            getDriver().manage().window().maximize();
+        }
+
     }
 
     public static WebDriver getDriver() {
-        return driver.get();
+        WebDriver driver = DRIVER.get();
+
+        if (driver == null) {
+            throw new IllegalStateException("WebDriver is not initialized. Call initDriver() first.");
+        }
+        return driver;
     }
 
-    public void quitDriver() {
-        if (getDriver() != null) {
-            getDriver().quit();
-            driver.remove();
+    public static void quitDriver() {
+        WebDriver driver = DRIVER.get();
+        if (driver != null) {
+            driver.quit();
+            DRIVER.remove();
         }
     }
 }

@@ -1,27 +1,59 @@
 package com.emanueltuca.automation.ui.pages;
 
+import com.emanueltuca.automation.utils.PageNavigator;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
-import static com.emanueltuca.automation.core.config.Config.getBaseUrl;
+import static com.emanueltuca.automation.core.config.ConfigReader.getBaseUrl;
 
 public class LoginPage extends BasePage {
 
-    private final By username = By.id("user-name");
-    private final By password = By.id("password");
-    private final By loginBtn = By.id("login-button");
+    private final By usernameInput = By.id("user-name");
+    private final By passwordInput = By.id("password");
+    private final By loginButton = By.id("login-button");
+    private final By errorMessage = By.cssSelector("[data-test='error']");
 
-    public LoginPage(WebDriver driver) {
-        super(driver);
+    public LoginPage(WebDriver driver, PageNavigator navigator) {
+        super(driver, navigator);
     }
 
-    public void open() {
+    @Override
+    public void waitUntilLoaded() {
+        find(usernameInput);
+        find(passwordInput);
+        find(loginButton);
+    }
+
+    public LoginPage open() {
         openUrl(getBaseUrl());
+        return this;
     }
 
-    public void loginAs(String user, String pass) {
-        driver.findElement(username).sendKeys(user);
-        driver.findElement(password).sendKeys(pass);
-        driver.findElement(loginBtn).click();
+    public LoginPage enterUsername(String username) {
+        type(usernameInput, username);
+        return this;
+    }
+
+    public LoginPage enterPassword(String password) {
+        type(passwordInput, password);
+        return this;
+    }
+
+    public InventoryPage submitLoginExpectingSuccess() {
+        click(loginButton);
+        return navigator.transitionTo(InventoryPage.class);
+    }
+
+    public LoginPage submitLoginExpectingFailure() {
+        click(loginButton);
+        return this;
+    }
+
+    public String getErrorMessageText() {
+        return getText(errorMessage);
+    }
+
+    public boolean isErrorMessageDisplayed() {
+        return isDisplayed(errorMessage);
     }
 }

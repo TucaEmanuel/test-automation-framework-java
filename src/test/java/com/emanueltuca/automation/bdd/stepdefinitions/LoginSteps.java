@@ -1,28 +1,37 @@
 package com.emanueltuca.automation.bdd.stepdefinitions;
 
-import com.emanueltuca.automation.core.driver.DriverFactory;
+import com.emanueltuca.automation.bdd.assertions.LoginAssertions;
+import com.emanueltuca.automation.bdd.context.TestContext;
+import flows.LoginFlow;
 import io.cucumber.java.en.*;
-import com.emanueltuca.automation.ui.pages.LoginPage;
 
 public class LoginSteps {
 
-    private LoginPage loginPage;
+    private final LoginFlow loginFlow;
+    private final LoginAssertions loginAssertions;
 
-    @Given("I open the login page")
+    public LoginSteps(TestContext context) {
+        this.loginFlow = new LoginFlow(context);
+        this.loginAssertions = new LoginAssertions(context);
+    }
+
+    @Given("the login page is opened")
     public void openLoginPage() {
-        if (loginPage == null) {
-            loginPage = new LoginPage(DriverFactory.getDriver());
+        loginFlow.openLoginPage();
+    }
+
+    @When("^user logs in with (valid|invalid) credentials: \"(.*)\" username and \"(.*)\" password$")
+    public void userLogsInWithSpecificCredentials(String option, String username, String password) {
+        if ("valid".equals(option)) {
+            loginFlow.loginAs(username, password);
+        } else {
+            loginFlow.loginAsInvalid(username, password);
         }
-        loginPage.open();
     }
 
-    @When("I login with valid credentials")
-    public void login() {
-        loginPage.loginAs("standard_user", "secret_sauce");
+    @Then("the error message with {string} text is displayed")
+    public void theErrorMessageWithTextIsDisplayed(String errorMessage) {
+        loginAssertions.verifyErrorMessage(errorMessage);
     }
 
-    @Then("I should see the home page")
-    public void verifyHomePage() {
-        System.out.println("Add assertion here");
-    }
 }

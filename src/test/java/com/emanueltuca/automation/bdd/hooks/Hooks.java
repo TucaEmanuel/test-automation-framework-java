@@ -1,22 +1,27 @@
 package com.emanueltuca.automation.bdd.hooks;
 
+import com.emanueltuca.automation.bdd.context.TestContext;
 import com.emanueltuca.automation.core.driver.DriverFactory;
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
 
 public class Hooks {
-    private DriverFactory driverFactory;
+
+    private final TestContext testContext;
+
+    public Hooks(TestContext testContext) {
+        this.testContext = testContext;
+    }
 
     @Before
     public void setUp() {
-        driverFactory = new DriverFactory();
-        driverFactory.initializeDriver();
+        DriverFactory.initializeDriver();
     }
 
     @After
     public void tearDown() {
-        if (driverFactory != null) {
-            driverFactory.quitDriver();
-        }
+        // Reset navigation state to prevent stale references
+        testContext.cleanup();
+        DriverFactory.quitDriver();
     }
 }
