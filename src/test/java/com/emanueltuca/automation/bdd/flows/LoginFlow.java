@@ -1,4 +1,4 @@
-package flows;
+package com.emanueltuca.automation.bdd.flows;
 
 import com.emanueltuca.automation.bdd.context.TestContext;
 import com.emanueltuca.automation.ui.pages.LoginPage;

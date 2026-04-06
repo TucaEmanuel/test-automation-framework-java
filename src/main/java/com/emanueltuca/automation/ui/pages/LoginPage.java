@@ -17,11 +17,8 @@ public class LoginPage extends BasePage {
         super(driver, navigator);
     }
 
-    @Override
-    public void waitUntilLoaded() {
-        find(usernameInput);
-        find(passwordInput);
-        find(loginButton);
+    protected By getDistinctiveElementToCheckIfPageIsLoaded() {
+        return loginButton;
     }
 
     public LoginPage open() {

@@ -23,7 +23,21 @@ public abstract class BasePage {
         this.wait = new WebDriverWait(driver, Duration.ofSeconds(getElementTimeout()));
     }
 
-    public abstract void waitUntilLoaded();
+    protected abstract By getDistinctiveElementToCheckIfPageIsLoaded();
+
+    public BasePage waitUntilLoaded() {
+        By distinctiveElement = getDistinctiveElementToCheckIfPageIsLoaded();
+        try {
+            find(distinctiveElement);
+        } catch (TimeoutException e) {
+            throw new IllegalStateException(
+                    String.format("Expected page {%s} to be loaded, but is the distinctive element with {%s} selector is not visible.",
+                            this.getClass().getSimpleName(), distinctiveElement)
+            );
+        }
+        return this;
+    }
+
 
     protected WebElement find(By locator) {
         return wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
