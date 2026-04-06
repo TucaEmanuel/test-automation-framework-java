@@ -4,6 +4,11 @@ Feature: Login
   I want to login successfully
 
   Scenario: Successful login
-    Given I open the login page
-    When I login with valid credentials
-    Then I should see the home page
+    Given the login page is opened
+    When user logs in with valid credentials: "standard_user" username and "secret_sauce" password
+    Then user is redirected to the inventory page
+
+  Scenario: Unsuccessful login with invalid credentials
+    Given the login page is opened
+    When user logs in with invalid credentials: "invalid_user" username and "invalid_password" password
+    Then the error message with "Epic sadface: Username and password do not match any user in this service" text is displayed
