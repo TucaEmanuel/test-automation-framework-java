@@ -17,9 +17,8 @@ public class InventoryPage extends BasePage {
         return isDisplayed(inventoryContainer);
     }
 
-    public void waitUntilLoaded() {
-        find(inventoryContainer);
-        find(pageTitle);
+    protected By getDistinctiveElementToCheckIfPageIsLoaded() {
+        return inventoryContainer;
     }
 
     public String getTitle() {

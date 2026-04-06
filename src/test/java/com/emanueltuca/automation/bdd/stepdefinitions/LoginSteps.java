@@ -2,7 +2,7 @@ package com.emanueltuca.automation.bdd.stepdefinitions;
 
 import com.emanueltuca.automation.bdd.assertions.LoginAssertions;
 import com.emanueltuca.automation.bdd.context.TestContext;
-import flows.LoginFlow;
+import com.emanueltuca.automation.bdd.flows.LoginFlow;
 import io.cucumber.java.en.*;
 
 public class LoginSteps {

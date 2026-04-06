@@ -31,13 +31,12 @@ public class TestContext implements PageNavigator{
             );
         }
 
-        return pageType.cast(currentPage);
+        return pageType.cast(currentPage.waitUntilLoaded());
     }
 
     @Override
     public <T extends BasePage> T transitionTo(Class<T> pageClass) {
         T page = pageManager.getPage(pageClass);
-//        page.waitUntilLoaded();
         this.currentPage = page;
         return page;
     }
