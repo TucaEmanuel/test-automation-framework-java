@@ -7,12 +7,16 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.time.Duration;
 
 import static com.emanueltuca.automation.core.config.ConfigReader.getElementTimeout;
 
 public abstract class BasePage {
+    protected static final Logger logger = LoggerFactory.getLogger(BasePage.class);
+
     protected WebDriver driver;
     protected WebDriverWait wait;
     protected PageNavigator navigator;
@@ -40,23 +44,29 @@ public abstract class BasePage {
 
 
     protected WebElement find(By locator) {
+        logger.debug("Finding element: {}", locator);
         return wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
     }
 
     protected void waitForUrlContains(String partialUrl) {
+        logger.debug("Waiting for URL to contain: {}", partialUrl);
         wait.until(ExpectedConditions.urlContains(partialUrl));
     }
 
-    protected void openUrl(String url) {
+    protected BasePage openUrl(String url) {
+        logger.debug("Opening URL: {}", url);
         driver.get(url);
+        return this;
     }
 
     protected BasePage click(By locator) {
+        logger.debug("Clicking on element: {}", locator);
         wait.until(ExpectedConditions.elementToBeClickable(locator)).click();
         return this;
     }
 
     protected BasePage type(By locator, String text) {
+        logger.debug("Typing '{}' into element: {}", text, locator);
         WebElement element = find(locator);
         element.clear();
         element.sendKeys(text);
@@ -64,13 +74,17 @@ public abstract class BasePage {
     }
 
     protected String getText(By locator) {
+        logger.debug("Getting text from element: {}", locator);
         return find(locator).getText();
     }
 
     protected boolean isDisplayed(By locator) {
         try {
-            return find(locator).isDisplayed();
+            boolean displayed = find(locator).isDisplayed();
+            logger.debug("Element {} is displayed: {}", locator, displayed);
+            return displayed;
         } catch (TimeoutException e) {
+            logger.debug("Element {} is not displayed", locator);
             return false;
         }
     }

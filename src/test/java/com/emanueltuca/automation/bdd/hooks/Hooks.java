@@ -7,8 +7,12 @@ import io.cucumber.java.After;
 import io.cucumber.java.Before;
 import io.cucumber.java.Scenario;
 import org.openqa.selenium.WebDriver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Hooks {
+
+    private static final Logger logger = LoggerFactory.getLogger(Hooks.class);
 
     private final TestContext testContext;
 
@@ -17,12 +21,16 @@ public class Hooks {
     }
 
     @Before
-    public void setUp() {
+    public void setUp(Scenario scenario) {
+        logger.info("========== START SCENARIO: {} ==========", scenario.getName());
         DriverFactory.initializeDriver();
     }
 
     @After
     public void tearDown(Scenario scenario) {
+        logger.info("Scenario finished: {}", scenario.getName());
+        logger.info("Scenario status: {}", scenario.getStatus());
+
         WebDriver driver = DriverFactory.getDriver();
         try {
             handleFailureArtifacts(scenario, driver);
@@ -31,10 +39,13 @@ public class Hooks {
             testContext.cleanup();
             DriverFactory.quitDriver();
         }
+
+        logger.info("========== END SCENARIO: {} ==========", scenario.getName());
     }
 
     private void handleFailureArtifacts(Scenario scenario, WebDriver driver) {
         if (scenario.isFailed() && driver != null) {
+            logger.error("Scenario failed: {}", scenario.getName());
             //capture screenshot
             byte[] screenshot = ScreenshotUtils.takeScreenshotAsBytes(driver);
 
@@ -43,7 +54,7 @@ public class Hooks {
 
             // save it in the directory
             String savedPath = ScreenshotUtils.saveScreenshot(screenshot, scenario.getName());
-            System.out.println("Screenshot saved at: " + savedPath);
+            logger.error("Screenshot saved at: {}", savedPath);
         }
     }
 }
