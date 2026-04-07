@@ -76,3 +76,34 @@ Flows	business flows
 Assertions	validations
 Steps	gherkin mapping
 Hooks	setup/teardown
+
+
+
+**Logging**
+Implemented a structured logging system using SLF4J with Log4j 2 backend, including console and rolling file appenders, scenario lifecycle logging, and failure diagnostics with screenshot path capture.
+
+
+INFO
+
+pentru evenimente importante:
+
+logger.info("Starting valid login flow");
+DEBUG
+
+pentru detalii tehnice:
+
+logger.debug("Clicking locator: {}", loginButton);
+WARN
+
+pentru chestii suspecte dar nereușite încă:
+
+logger.warn("Retrying click action for locator: {}", locator);
+ERROR
+
+pentru failure real:
+
+logger.error("Scenario failed: {}", scenario.getName());
+
+Cu excepție:
+
+logger.error("Unexpected error occurred", exception);
