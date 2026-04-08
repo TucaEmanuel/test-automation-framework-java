@@ -29,9 +29,9 @@ public class LoginSteps {
     public void userLogsInWithSpecificCredentials(String option, String username, String password) {
         logger.info("Executing step: user logs in with {} credentials", option);
         if ("valid".equals(option)) {
-            loginFlow.loginAs(username, password);
+            loginFlow.submitValidCredentials(username, password);
         } else {
-            loginFlow.loginAsInvalid(username, password);
+            loginFlow.submitInvalidCredentials(username, password);
         }
     }
 

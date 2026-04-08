@@ -16,23 +16,20 @@ import java.util.Map;
 public class PageManager {
     private static final Logger logger = LoggerFactory.getLogger(PageManager.class);
 
-    private final PageNavigator navigator;
     private final Map<Class<? extends BasePage>, BasePage> pageCache = new HashMap<>();
 
-    public PageManager(PageNavigator navigator) {
-        this.navigator = navigator;
-        logger.debug("PageManager initialized");
+    public PageManager() {
     }
 
     public <T extends BasePage> T getPage(Class<T> pageClass) {
         logger.debug("Getting page: {}", pageClass.getSimpleName());
 
-        WebDriver driver =  DriverFactory.getDriver();
+        WebDriver driver = DriverFactory.getDriver();
 
         if (!pageCache.containsKey(pageClass)) {
             try {
                 logger.debug("Page not in cache, instantiating: {}", pageClass.getSimpleName());
-                T page = pageClass.getDeclaredConstructor(WebDriver.class, PageNavigator.class).newInstance(driver, navigator);
+                T page = pageClass.getDeclaredConstructor(WebDriver.class).newInstance(driver);
                 pageCache.put(pageClass, page);
                 logger.debug("Page instantiated and cached: {}", pageClass.getSimpleName());
             } catch (Exception e) {

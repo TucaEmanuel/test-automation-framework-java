@@ -1,6 +1,5 @@
 package com.emanueltuca.automation.ui.pages;
 
-import com.emanueltuca.automation.utils.PageNavigator;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.slf4j.Logger;
@@ -12,8 +11,8 @@ public class InventoryPage extends BasePage {
     private final By inventoryContainer = By.id("inventory_container");
     private final By pageTitle = By.cssSelector(".title");
 
-    public InventoryPage(WebDriver driver, PageNavigator navigator) {
-        super(driver, navigator);
+    public InventoryPage(WebDriver driver) {
+        super(driver);
         logger.debug("InventoryPage initialized");
     }
 

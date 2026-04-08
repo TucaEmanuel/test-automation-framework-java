@@ -39,11 +39,11 @@ public class AllureManager {
      */
     public static void initialize() {
         if (!initialized) {
-            logger.info("Initializing Allure Manager...");
+            logger.info("Initializing Allure Manager");
             setupEnvironment();
             writeCategories();
             initialized = true;
-            logger.info("Allure Manager initialized successfully");
+            logger.debug("Allure Manager initialized successfully");
         }
     }
 
