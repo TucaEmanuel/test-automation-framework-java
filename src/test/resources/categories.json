@@ -1,0 +1,27 @@
+[
+  {
+    "name": "Assertion Failures",
+    "matchedStatuses": ["failed"],
+    "messageRegex": ".*Assertion.*"
+  },
+  {
+    "name": "Element Not Found",
+    "matchedStatuses": ["failed"],
+    "traceRegex": ".*NoSuchElementException.*"
+  },
+  {
+    "name": "Timeout Issues",
+    "matchedStatuses": ["failed"],
+    "traceRegex": ".*TimeoutException.*"
+  },
+  {
+    "name": "Login Failures",
+    "matchedStatuses": ["failed"],
+    "messageRegex": ".*login.*"
+  },
+  {
+    "name": "Network Issues",
+    "matchedStatuses": ["failed"],
+    "traceRegex": ".*ConnectException.*"
+  }
+]

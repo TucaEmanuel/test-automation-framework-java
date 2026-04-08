@@ -42,7 +42,17 @@ public class ConfigReader {
 
     public static String getBrowser() {
         logger.debug("Getting browser configuration");
-        return getProperty("browser");
+        // Check for system property override first
+        String systemBrowser = System.getProperty("driver");
+        if (systemBrowser != null && !systemBrowser.trim().isEmpty()) {
+            logger.info("Using browser from system property: {}", systemBrowser);
+            return systemBrowser.trim().toLowerCase();
+        }
+
+        // Fall back to properties file
+        String configBrowser = getProperty("browser");
+        logger.debug("Using browser from configuration: {}", configBrowser);
+        return configBrowser;
     }
 
     public static int getPageTimeout() {
@@ -57,6 +67,17 @@ public class ConfigReader {
 
     public static boolean isHeadless() {
         logger.debug("Getting headless mode configuration");
-        return Boolean.parseBoolean(getProperty("headless"));
+
+        // Check for system property override first
+        String headlessOption = System.getProperty("headless");
+        if (headlessOption != null && !headlessOption.trim().isEmpty()) {
+            logger.info("Using headless option from system property: {}", headlessOption);
+            return Boolean.parseBoolean(headlessOption.trim().toLowerCase());
+        }
+
+        // Fall back to properties file
+        boolean configHeadless =  Boolean.parseBoolean(getProperty("headless"));
+        logger.debug("Using headless option from configuration: {}", configHeadless);
+        return configHeadless;
     }
 }
