@@ -1,28 +1,32 @@
 # Test Automation Framework - AI Agent Guidelines
 
 ## Project Overview
-A scalable, maintainable test automation framework built with **Java 17**, **Selenium WebDriver 4.41.0**, **JUnit 5**, and **Cucumber 7**. Uses Maven for dependency management with all dependencies sourced from **Maven Central Repository**. Follows the **Page Object Model (POM)** pattern with **TestContext**, **PageManager**, **Flows**, and **Assertions** layers for maintainability and scalability. Includes structured logging with **SLF4J** and **Log4j 2** for scenario lifecycle, failure diagnostics, and debug information.
+A **production-ready test automation framework** built with **Java 17**, **Selenium WebDriver 4.41.0**, **JUnit 5**, and **Cucumber 7**. Features enterprise-grade architecture with **thread-safe parallel execution**, **professional Allure reporting**, **comprehensive logging** (SLF4J + Log4j 2), and **centralized Allure management**.
 
-## Critical Architecture
+Follows the **Page Object Model (POM)** pattern enhanced with **TestContext**, **PageManager**, **Flows**, and **Assertions** layers. All test infrastructure is production-grade, CI/CD ready, and fully documented.
+
+## 🎯 Critical Architecture
 
 ### Core Components
-- **DriverFactory** (`core/driver/`): ThreadLocal WebDriver management with automatic driver setup via WebDriverManager. Handles Chrome/Firefox browser initialization.
-- **Config** (`core/config/`): Properties loader for environment-specific values (base URL, browser choice, timeouts).
-- **BasePage** (`ui/pages/`): Abstract base class with WebDriver, WebDriverWait, PageNavigator, and common Selenium operations.
-- **Page Objects** (`ui/pages/`): Encapsulate page locators (By selectors) and action methods, extending BasePage.
-- **PageManager** (`utils/`): Generic reflection-based page instantiation and caching, ensures single instance per page class.
-- **TestContext** (`bdd/context/`): Implements PageNavigator, manages currentPage state, provides type-safe page access and transitions.
-- **Flows** (`bdd/flows/`): Orchestrate high-level business logic sequences using TestContext.
+- **DriverFactory** (`core/driver/`): ThreadLocal WebDriver management with automatic driver setup via WebDriverManager. Handles Chrome/Firefox browser initialization with system property overrides.
+- **ConfigReader** (`core/config/`): Properties loader for environment-specific values with system property override support (-Ddriver, -Dheadless).
+- **BasePage** (`ui/pages/`): Abstract base class with WebDriver, WebDriverWait, PageNavigator, and common Selenium operations. No PageFactory - direct findElement() calls.
+- **Page Objects** (`ui/pages/`): Encapsulate page locators (By selectors) and action methods, extending BasePage with fluent interface.
+- **PageManager** (`utils/`): Generic reflection-based page instantiation with **ConcurrentHashMap** caching for thread-safe parallel execution.
+- **TestContext** (`bdd/context/`): Implements PageNavigator, manages currentPage state with **volatile + synchronized** for thread-safety, provides type-safe page access and transitions.
+- **Flows** (`bdd/flows/`): Orchestrate high-level business logic sequences using TestContext with **@Step annotations** for Allure reporting.
 - **Assertions** (`bdd/assertions/`): Centralized validation methods using TestContext for page state checks.
+- **AllureManager** (`utils/reporting/`): **NEW** - Centralized management for Allure Reports setup, environment configuration, and test metadata orchestration.
+- **AllureReportUtils** (`utils/reporting/`): **NEW** - Utility methods for Allure API interactions (screenshots, logs, labels, severity, features, stories).
 
 ### Data Flow: Test Execution
-1. **Hooks.java** `@Before`: Initializes DriverFactory and creates TestContext with PageManager
+1. **Hooks.java** `@Before`: AllureManager.initialize() + AllureManager.setupTestMetadata(), DriverFactory.initializeDriver()
 2. **Step Definitions** use injected TestContext to access Flows and Assertions
-3. **Flows** orchestrate business logic using TestContext for page navigation and actions
-4. **Page Objects** instantiated via PageManager, receive driver and PageNavigator (TestContext) in constructor
-5. **Hooks.java** `@After`: Cleans up TestContext (resets currentPage) and DriverFactory
+3. **Flows** orchestrate business logic using TestContext with @Step annotations for Allure
+4. **Page Objects** instantiated via PageManager with ConcurrentHashMap caching
+5. **Hooks.java** `@After`: Screenshot attachment via AllureManager, cleanup TestContext, DriverFactory.quitDriver()
 
-## Critical Dependencies & Versions (Maven Central)
+## 📦 Critical Dependencies & Versions (Maven Central)
 ```
 Core Testing:
 - org.junit.jupiter:junit-jupiter:5.11.0 (includes platform, engine, api)
@@ -35,16 +39,21 @@ Selenium & Browser Management:
 - org.seleniumhq.selenium:selenium-java:4.41.0
 - io.github.bonigarcia:webdrivermanager:6.3.3
 
+Allure Reports & AspectJ:
+- io.qameta.allure:allure-cucumber7-jvm:2.33.0 (@Step annotation support)
+- org.aspectj:aspectjweaver:1.9.21 (Runtime weaving for @Step)
+
 Utilities:
 - org.projectlombok:lombok:1.18.42
 - org.slf4j:slf4j-api:2.0.13
-- org.apache.logging.log4j:log4j-slf4j2-impl:2.23.1
-- org.apache.logging.log4j:log4j-core:2.23.1
+- org.apache.logging.log4j:log4j-slf4j2-impl:2.25.4
+- org.apache.logging.log4j:log4j-core:2.25.4
 ```
 
 **⚠️ CRITICAL**: Version alignment (prevents "TestEngine with ID 'cucumber' failed to discover tests"):
 - JUnit 5.11.0 pairs with JUnit Platform 1.11.0
 - Cucumber 7.18.0 requires `cucumber-junit-platform-engine` for JUnit Platform integration
+- AspectJ 1.9.21 processes @Step annotations at runtime
 - Do NOT mix JUnit 6.x with Cucumber 7.x
 
 ## Build & Execution
@@ -54,13 +63,28 @@ Utilities:
 mvn clean compile           # Compile only
 mvn test                   # Run all tests (Cucumber via RunCucumberTest)
 mvn test -Dtest=RunCucumberTest  # Explicit Cucumber runner
+mvn test -Ddriver=chrome   # Run tests with Chrome browser
+mvn test -Ddriver=firefox  # Run tests with Firefox browser
+mvn test -Dheadless=false  # Run tests with visible browser window
+mvn test -Dheadless=true   # Run tests in headless mode
+mvn test -Djunit.jupiter.execution.parallel.enabled=true  # Run tests in parallel
+mvn clean test && allure generate target/allure-results -o target/allure-report --clean && allure open target/allure-report  # Run tests and generate Allure report
 mvn clean                  # Remove target directory
 ```
 
 ### Key Configuration
-- **Surefire Plugin**: Includes `RunCucumberTest.java` to execute Cucumber scenarios
+- **Surefire Plugin**: Includes `RunCucumberTest.java` to execute Cucumber scenarios with AspectJ weaving
 - **Compiler**: Java 17 source/target
-- **Properties file**: `src/main/resources/config/test.properties` (loaded by Config.java static initializer)
+- **Properties file**: `src/main/resources/config/test.properties` (loaded by ConfigReader static initializer)
+- **Allure Plugin**: Configured in junit-platform.properties for @Step annotation processing
+
+### Parallel Execution Configuration
+The framework supports parallel test execution with thread-safe isolation:
+- **Thread Safety**: Each test thread gets isolated TestContext, PageManager, and WebDriver (ThreadLocal)
+- **Concurrent Cache**: ConcurrentHashMap for page object caching prevents race conditions
+- **Default**: Parallelization disabled (use `-Djunit.jupiter.execution.parallel.enabled=true` to enable)
+- **Thread Strategy**: Fixed parallelism configurable via `junit.jupiter.execution.parallel.config.fixed.parallelism`
+- **See**: `THREAD_SAFETY.md` for comprehensive parallel execution guide
 
 ## Cucumber Test Discovery (JUnit Platform Engine)
 
@@ -180,6 +204,8 @@ headless=true
 ### Config Class Pattern
 - Static initializer loads properties on JVM startup
 - Getter methods for base URL, browser, timeouts (page and element)
+- **System Property Override**: Browser can be overridden via `-Ddriver=chrome` command line argument
+- **System Property Override**: Headless mode can be overridden via `-Dheadless=true` command line argument
 - Throws RuntimeException if properties not found
 
 ## Logging System
@@ -256,19 +282,30 @@ If creating step definitions in NEW package, update RunCucumberTest glue paramet
 8. **Assertions for Validations**: Centralized checks using TestContext for page state
 
 ## Key Files Reference
-- `pom.xml`: Dependencies, Maven Surefire configuration
-- `src/test/java/.../runners/RunCucumberTest.java`: Suite entry point with Cucumber engine config
-- `src/test/java/.../hooks/Hooks.java`: WebDriver lifecycle management
-- `src/main/java/.../core/config/Config.java`: Property loading
-- `src/main/java/.../core/driver/DriverFactory.java`: ThreadLocal WebDriver creation/cleanup
-- `src/main/java/.../ui/pages/BasePage.java`: Common page operations
-- `src/main/java/.../ui/pages/*.java`: Page objects with locators and actions
-- `src/main/java/.../utils/PageManager.java`: Generic page instantiation and caching
-- `src/main/java/.../utils/PageNavigator.java`: Interface for page navigation
-- `src/main/resources/log4j2.xml`: Logging configuration
-- `src/test/java/.../bdd/context/TestContext.java`: Test state management and navigation
-- `src/test/java/.../bdd/flows/*.java`: Business logic orchestration
+- `pom.xml`: Dependencies (Allure 2.33.0, AspectJ 1.9.21, Selenium 4.41.0, JUnit 5.11.0, Cucumber 7.18.0), Maven plugins with AspectJ weaving
+- `THREAD_SAFETY.md`: Parallel execution guide with thread-safety patterns
+- `ALLURE_REPORTS_GUIDE.md`: Comprehensive Allure documentation
+- `ALLURE_QUICK_START.md`: Quick reference for report generation
+- `src/test/resources/allure.properties`: Allure configuration
+- `src/test/resources/junit-platform.properties`: Cucumber glue + Allure plugin
+- `src/test/resources/categories.json`: Test categorization for Allure reports
+- `src/main/resources/config/test.properties`: Configuration with system overrides
+- `src/main/resources/log4j2.xml`: Logging setup
+- `src/test/java/.../runners/RunCucumberTest.java`: Suite with Cucumber engine
+- `src/test/java/.../hooks/Hooks.java`: Lifecycle + AllureManager integration
+- `src/main/java/.../core/config/ConfigReader.java`: Properties loader
+- `src/main/java/.../core/driver/DriverFactory.java`: ThreadLocal WebDriver management
+- `src/main/java/.../ui/pages/BasePage.java`: Base page with common operations
+- `src/main/java/.../ui/pages/*.java`: Page objects with locators
+- `src/main/java/.../utils/PageManager.java`: Page instantiation with ConcurrentHashMap caching (thread-safe)
+- `src/main/java/.../utils/PageNavigator.java`: Navigation interface
+- `src/test/java/.../bdd/context/TestContext.java`: State management (volatile + synchronized)
+- `src/test/java/.../bdd/flows/*.java`: Business logic with @Step annotations
 - `src/test/java/.../bdd/assertions/*.java`: Validation methods
-- `src/test/java/.../bdd/stepdefinitions/*.java`: Gherkin step implementations
+- `src/test/java/.../bdd/stepdefinitions/*.java`: Gherkin mappings
+- `src/test/java/.../utils/reporting/AllureManager.java`: ✅ Centralized Allure setup + metadata
+- `src/test/java/.../utils/reporting/AllureReportUtils.java`: ✅ Allure API wrapper methods
 - `src/test/resources/features/*.feature`: Cucumber scenarios
+
+
 

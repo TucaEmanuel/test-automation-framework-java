@@ -2,7 +2,8 @@ package com.emanueltuca.automation.bdd.flows;
 
 import com.emanueltuca.automation.bdd.context.TestContext;
 import com.emanueltuca.automation.ui.pages.LoginPage;
-import org.slf4j.Logger;
+import io.qameta.allure.Step;
+            import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class LoginFlow {
@@ -14,12 +15,14 @@ public class LoginFlow {
         this.testContext = testContext;
     }
 
+    @Step("Open Login Page")
     public void openLoginPage() {
         logger.info("Opening login page");
         testContext.transitionTo(LoginPage.class).open();
         logger.info("Login page opened successfully");
     }
 
+    @Step("Login with username '{username}'")
     public void loginAs(String username, String password) {
         logger.info("Starting valid login flow with username: {}", username);
         testContext.getCurrentPage(LoginPage.class)
@@ -29,6 +32,7 @@ public class LoginFlow {
         logger.info("Login flow executed successfully");
     }
 
+    @Step("Login with invalid credentials username '{username}'")
     public void loginAsInvalid(String username, String password) {
         logger.info("Starting invalid login flow with username: {}", username);
         testContext.getCurrentPage(LoginPage.class)

@@ -8,6 +8,6 @@ import org.junit.platform.suite.api.*;
 @IncludeEngines("cucumber")
 @SelectClasspathResource("features")
 @ConfigurationParameter(key = GLUE_PROPERTY_NAME, value = "com.emanueltuca.automation.bdd.stepdefinitions,com.emanueltuca.automation.bdd.hooks")
-@ConfigurationParameter(key = PLUGIN_PROPERTY_NAME, value = "pretty")
+//@ConfigurationParameter(key = PLUGIN_PROPERTY_NAME, value = "pretty")
 public class RunCucumberTest {
 }
