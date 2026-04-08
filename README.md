@@ -4,9 +4,9 @@
 [![Selenium](https://img.shields.io/badge/Selenium-4.41.0-43B02A?style=for-the-badge&logo=Selenium&logoColor=white)](https://www.selenium.dev/)
 [![JUnit](https://img.shields.io/badge/JUnit5-5.11.0-25A162?style=for-the-badge&logo=junit5&logoColor=white)](https://junit.org/junit5/)
 [![Cucumber](https://img.shields.io/badge/Cucumber-7.18.0-23D96C?style=for-the-badge&logo=cucumber&logoColor=white)](https://cucumber.io/)
-[![Allure](https://img.shields.io/badge/Allure-2.25.0-FF6B35?style=for-the-badge&logo=allure&logoColor=white)](https://docs.qameta.io/allure/)
+[![Allure](https://img.shields.io/badge/Allure-2.33.0-FF6B35?style=for-the-badge&logo=allure&logoColor=white)](https://docs.qameta.io/allure/)
 [![Maven](https://img.shields.io/badge/Maven-3.6+-C71A36?style=for-the-badge&logo=apache-maven&logoColor=white)](https://maven.apache.org/)
-[![AspectJ](https://img.shields.io/badge/AspectJ-1.9.21-00A3FF?style=for-the-badge&logo=aspectj&logoColor=white)](https://www.eclipse.org/aspectj/)
+[![AspectJ](https://img.shields.io/badge/AspectJ-1.9.25.1-00A3FF?style=for-the-badge&logo=aspectj&logoColor=white)](https://www.eclipse.org/aspectj/)
 
 > **Production-Ready Test Automation Framework** demonstrating advanced QA engineering skills with enterprise-grade architecture, thread-safe parallel execution, and professional Allure reporting.
 
@@ -34,7 +34,7 @@
 
 ### ⚡ **Performance & Scalability**
 - ✅ **Parallel Execution** - 3.4x faster with 4 threads (120s → 35s)
-- ✅ **Thread-Safe Cache** - ConcurrentHashMap for page objects
+- ✅ **Thread-Safe Cache** - HashMap for page objects (isolation-based)
 - ✅ **Memory Efficiency** - Lazy loading and intelligent caching
 - ✅ **CPU Optimization** - Lock-free concurrent reads
 - ✅ **Scalable** - Supports 1-16+ concurrent test threads
@@ -61,7 +61,7 @@
 
 🎯 STATE MANAGEMENT LAYER
     🎯 TEST CONTEXT (Thread-Safe Navigation)
-        📄 PAGE MANAGER (ConcurrentHashMap Caching)
+        📄 PAGE MANAGER (HashMap Caching)
             🖥️ PAGE OBJECTS (Fluent POM)
                 🌐 BASE PAGE (Common Selenium Operations)
 
@@ -100,7 +100,7 @@ Maximum Scalability:  20 seconds (8 threads) → 6x faster
 ### **Thread-Safety Guarantees**
 - ✅ **Zero Race Conditions** - Atomic operations with synchronized blocks
 - ✅ **Isolated Test Contexts** - Each test thread has dedicated state
-- ✅ **Concurrent Page Caching** - ConcurrentHashMap prevents conflicts
+- ✅ **HashMap Page Caching** - No shared state between threads
 - ✅ **Browser Instance Isolation** - ThreadLocal WebDriver management
 
 ### **Resource Optimization**
@@ -330,8 +330,8 @@ jobs:
 
 ### **Architecture & Design Patterns**
 - **Page Object Model** - Fluent interfaces, method chaining, maintainability
-- **TestContext Pattern** - State management with thread-safe navigation (volatile + synchronized)
-- **PageManager with ConcurrentHashMap** - Lock-free caching for thread-safe parallel execution
+- **TestContext Pattern** - State management with thread-safe navigation through isolation
+- **PageManager with HashMap** - Efficient caching for thread-safe parallel execution
 - **Dependency Injection** - Cucumber Picocontainer for test isolation
 - **AllureManager Integration** - Centralized Allure setup (environment, categories, metadata)
 - **Factory & Singleton Patterns** - Efficient resource management with ThreadLocal

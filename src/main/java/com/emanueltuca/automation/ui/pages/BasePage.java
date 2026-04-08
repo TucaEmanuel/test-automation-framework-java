@@ -1,6 +1,5 @@
 package com.emanueltuca.automation.ui.pages;
 
-import com.emanueltuca.automation.utils.PageNavigator;
 import org.openqa.selenium.By;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
@@ -19,11 +18,9 @@ public abstract class BasePage {
 
     protected WebDriver driver;
     protected WebDriverWait wait;
-    protected PageNavigator navigator;
 
-    public BasePage(WebDriver driver, PageNavigator navigator) {
+    public BasePage(WebDriver driver) {
         this.driver = driver;
-        this.navigator = navigator;
         this.wait = new WebDriverWait(driver, Duration.ofSeconds(getElementTimeout()));
     }
 

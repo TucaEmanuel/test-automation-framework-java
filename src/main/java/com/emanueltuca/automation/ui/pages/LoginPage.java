@@ -1,6 +1,5 @@
 package com.emanueltuca.automation.ui.pages;
 
-import com.emanueltuca.automation.utils.PageNavigator;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.slf4j.Logger;
@@ -18,8 +17,8 @@ public class LoginPage extends BasePage {
     private final By loginButton = By.id("login-button");
     private final By errorMessage = By.cssSelector("[data-test='error']");
 
-    public LoginPage(WebDriver driver, PageNavigator navigator) {
-        super(driver, navigator);
+    public LoginPage(WebDriver driver) {
+        super(driver);
         logger.debug("LoginPage initialized");
     }
 
@@ -45,18 +44,9 @@ public class LoginPage extends BasePage {
         return this;
     }
 
-    public InventoryPage submitLoginExpectingSuccess() {
-        logger.info("Submitting login form expecting success");
+    public void submitLoginForm() {
+        logger.debug("Submitting login form");
         click(loginButton);
-        logger.info("Login submitted, transitioning to inventory page");
-        return navigator.transitionTo(InventoryPage.class);
-    }
-
-    public LoginPage submitLoginExpectingFailure() {
-        logger.info("Submitting login form expecting failure");
-        click(loginButton);
-        logger.info("Login submitted, error expected");
-        return this;
     }
 
     public String getErrorMessageText() {

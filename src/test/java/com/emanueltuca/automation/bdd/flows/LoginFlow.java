@@ -1,9 +1,10 @@
 package com.emanueltuca.automation.bdd.flows;
 
 import com.emanueltuca.automation.bdd.context.TestContext;
+import com.emanueltuca.automation.ui.pages.InventoryPage;
 import com.emanueltuca.automation.ui.pages.LoginPage;
 import io.qameta.allure.Step;
-            import org.slf4j.Logger;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class LoginFlow {
@@ -18,28 +19,44 @@ public class LoginFlow {
     @Step("Open Login Page")
     public void openLoginPage() {
         logger.info("Opening login page");
-        testContext.transitionTo(LoginPage.class).open();
+        LoginPage loginPage = testContext.getPage(LoginPage.class);
+        loginPage.open()
+                .waitUntilLoaded();
+
+        testContext.setCurrentPage(LoginPage.class);
         logger.info("Login page opened successfully");
     }
 
     @Step("Login with username '{username}'")
-    public void loginAs(String username, String password) {
+    public InventoryPage submitValidCredentials(String username, String password) {
         logger.info("Starting valid login flow with username: {}", username);
-        testContext.getCurrentPage(LoginPage.class)
-                .enterUsername(username)
+        LoginPage loginPage = testContext.getCurrentPage(LoginPage.class);
+
+        loginPage.enterUsername(username)
                 .enterPassword(password)
-                .submitLoginExpectingSuccess();
+                .submitLoginForm();
+
+        InventoryPage inventoryPage = testContext.getPage(InventoryPage.class);
+        inventoryPage.waitUntilLoaded();
+        testContext.setCurrentPage(InventoryPage.class);
         logger.info("Login flow executed successfully");
+
+        return inventoryPage;
     }
 
     @Step("Login with invalid credentials username '{username}'")
-    public void loginAsInvalid(String username, String password) {
+    public LoginPage submitInvalidCredentials(String username, String password) {
         logger.info("Starting invalid login flow with username: {}", username);
-        testContext.getCurrentPage(LoginPage.class)
-                .enterUsername(username)
+        LoginPage loginPage = testContext.getCurrentPage(LoginPage.class);
+        loginPage.enterUsername(username)
                 .enterPassword(password)
-                .submitLoginExpectingFailure();
+                .submitLoginForm();
+
+        loginPage.waitUntilLoaded();
+        testContext.setCurrentPage(LoginPage.class);
+
         logger.info("Invalid login flow executed successfully");
+        return loginPage;
     }
 
 }

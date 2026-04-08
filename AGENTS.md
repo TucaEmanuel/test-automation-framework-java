@@ -12,8 +12,8 @@ Follows the **Page Object Model (POM)** pattern enhanced with **TestContext**, *
 - **ConfigReader** (`core/config/`): Properties loader for environment-specific values with system property override support (-Ddriver, -Dheadless).
 - **BasePage** (`ui/pages/`): Abstract base class with WebDriver, WebDriverWait, PageNavigator, and common Selenium operations. No PageFactory - direct findElement() calls.
 - **Page Objects** (`ui/pages/`): Encapsulate page locators (By selectors) and action methods, extending BasePage with fluent interface.
-- **PageManager** (`utils/`): Generic reflection-based page instantiation with **ConcurrentHashMap** caching for thread-safe parallel execution.
-- **TestContext** (`bdd/context/`): Implements PageNavigator, manages currentPage state with **volatile + synchronized** for thread-safety, provides type-safe page access and transitions.
+- **PageManager** (`utils/`): Generic reflection-based page instantiation with **HashMap** caching for thread-safe parallel execution through isolation.
+- **TestContext** (`bdd/context/`): Manages currentPage state and provides type-safe page access and transitions through isolation.
 - **Flows** (`bdd/flows/`): Orchestrate high-level business logic sequences using TestContext with **@Step annotations** for Allure reporting.
 - **Assertions** (`bdd/assertions/`): Centralized validation methods using TestContext for page state checks.
 - **AllureManager** (`utils/reporting/`): **NEW** - Centralized management for Allure Reports setup, environment configuration, and test metadata orchestration.
@@ -23,7 +23,7 @@ Follows the **Page Object Model (POM)** pattern enhanced with **TestContext**, *
 1. **Hooks.java** `@Before`: AllureManager.initialize() + AllureManager.setupTestMetadata(), DriverFactory.initializeDriver()
 2. **Step Definitions** use injected TestContext to access Flows and Assertions
 3. **Flows** orchestrate business logic using TestContext with @Step annotations for Allure
-4. **Page Objects** instantiated via PageManager with ConcurrentHashMap caching
+4. **Page Objects** instantiated via PageManager with HashMap caching
 5. **Hooks.java** `@After`: Screenshot attachment via AllureManager, cleanup TestContext, DriverFactory.quitDriver()
 
 ## 📦 Critical Dependencies & Versions (Maven Central)
@@ -41,7 +41,7 @@ Selenium & Browser Management:
 
 Allure Reports & AspectJ:
 - io.qameta.allure:allure-cucumber7-jvm:2.33.0 (@Step annotation support)
-- org.aspectj:aspectjweaver:1.9.21 (Runtime weaving for @Step)
+- org.aspectj:aspectjweaver:1.9.25.1 (Runtime weaving for @Step)
 
 Utilities:
 - org.projectlombok:lombok:1.18.42
@@ -53,7 +53,7 @@ Utilities:
 **⚠️ CRITICAL**: Version alignment (prevents "TestEngine with ID 'cucumber' failed to discover tests"):
 - JUnit 5.11.0 pairs with JUnit Platform 1.11.0
 - Cucumber 7.18.0 requires `cucumber-junit-platform-engine` for JUnit Platform integration
-- AspectJ 1.9.21 processes @Step annotations at runtime
+- AspectJ 1.9.25.1 processes @Step annotations at runtime
 - Do NOT mix JUnit 6.x with Cucumber 7.x
 
 ## Build & Execution
@@ -81,7 +81,7 @@ mvn clean                  # Remove target directory
 ### Parallel Execution Configuration
 The framework supports parallel test execution with thread-safe isolation:
 - **Thread Safety**: Each test thread gets isolated TestContext, PageManager, and WebDriver (ThreadLocal)
-- **Concurrent Cache**: ConcurrentHashMap for page object caching prevents race conditions
+- **Isolation Strategy**: No shared state between threads - each test has dedicated resources
 - **Default**: Parallelization disabled (use `-Djunit.jupiter.execution.parallel.enabled=true` to enable)
 - **Thread Strategy**: Fixed parallelism configurable via `junit.jupiter.execution.parallel.config.fixed.parallelism`
 - **See**: `THREAD_SAFETY.md` for comprehensive parallel execution guide
@@ -282,7 +282,7 @@ If creating step definitions in NEW package, update RunCucumberTest glue paramet
 8. **Assertions for Validations**: Centralized checks using TestContext for page state
 
 ## Key Files Reference
-- `pom.xml`: Dependencies (Allure 2.33.0, AspectJ 1.9.21, Selenium 4.41.0, JUnit 5.11.0, Cucumber 7.18.0), Maven plugins with AspectJ weaving
+- `pom.xml`: Dependencies (Allure 2.33.0, AspectJ 1.9.25.1, Selenium 4.41.0, JUnit 5.11.0, Cucumber 7.18.0), Maven plugins with AspectJ weaving
 - `THREAD_SAFETY.md`: Parallel execution guide with thread-safety patterns
 - `ALLURE_REPORTS_GUIDE.md`: Comprehensive Allure documentation
 - `ALLURE_QUICK_START.md`: Quick reference for report generation
@@ -297,15 +297,13 @@ If creating step definitions in NEW package, update RunCucumberTest glue paramet
 - `src/main/java/.../core/driver/DriverFactory.java`: ThreadLocal WebDriver management
 - `src/main/java/.../ui/pages/BasePage.java`: Base page with common operations
 - `src/main/java/.../ui/pages/*.java`: Page objects with locators
-- `src/main/java/.../utils/PageManager.java`: Page instantiation with ConcurrentHashMap caching (thread-safe)
+- `src/main/java/.../utils/PageManager.java`: Page instantiation with HashMap caching (thread-safe through isolation)
 - `src/main/java/.../utils/PageNavigator.java`: Navigation interface
-- `src/test/java/.../bdd/context/TestContext.java`: State management (volatile + synchronized)
+- `src/test/java/.../bdd/context/TestContext.java`: State management through isolation
 - `src/test/java/.../bdd/flows/*.java`: Business logic with @Step annotations
 - `src/test/java/.../bdd/assertions/*.java`: Validation methods
 - `src/test/java/.../bdd/stepdefinitions/*.java`: Gherkin mappings
 - `src/test/java/.../utils/reporting/AllureManager.java`: ✅ Centralized Allure setup + metadata
 - `src/test/java/.../utils/reporting/AllureReportUtils.java`: ✅ Allure API wrapper methods
 - `src/test/resources/features/*.feature`: Cucumber scenarios
-
-
 
