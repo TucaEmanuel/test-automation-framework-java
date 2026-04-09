@@ -1,6 +1,7 @@
 package com.emanueltuca.automation.bdd.hooks;
 
 import com.emanueltuca.automation.bdd.context.ExecutionContext;
+import com.emanueltuca.automation.bdd.context.PageContext;
 import com.emanueltuca.automation.bdd.context.TestContext;
 import com.emanueltuca.automation.core.driver.DriverFactory;
 import com.emanueltuca.automation.utils.ScreenshotUtils;
@@ -25,9 +26,12 @@ public class Hooks {
 
     private static final Logger logger = LoggerFactory.getLogger(Hooks.class);
 
+    private final PageContext pageContext;
     private final TestContext testContext;
 
-    public Hooks(TestContext testContext) {
+    public Hooks(PageContext pageContext, TestContext testContext) {
+
+        this.pageContext = pageContext;
         this.testContext = testContext;
     }
 
@@ -57,8 +61,8 @@ public class Hooks {
             handleFailureArtifacts(scenario, driver);
         } finally {
             // Reset navigation state to prevent stale references
+            pageContext.cleanup();
             testContext.cleanup();
-
             DriverFactory.quitDriver();
 
             logger.info("========== END SCENARIO: {} ==========", scenario.getName());

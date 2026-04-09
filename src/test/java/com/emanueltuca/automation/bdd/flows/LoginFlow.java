@@ -1,7 +1,8 @@
 package com.emanueltuca.automation.bdd.flows;
 
-import com.emanueltuca.automation.bdd.context.TestContext;
-import com.emanueltuca.automation.ui.pages.InventoryPage;
+import com.emanueltuca.automation.bdd.context.PageContext;
+import com.emanueltuca.automation.domain.DemoUser;
+import com.emanueltuca.automation.ui.pages.ProductCatalogPage;
 import com.emanueltuca.automation.ui.pages.LoginPage;
 import io.qameta.allure.Step;
 import org.slf4j.Logger;
@@ -10,53 +11,56 @@ import org.slf4j.LoggerFactory;
 public class LoginFlow {
     private static final Logger logger = LoggerFactory.getLogger(LoginFlow.class);
 
-    private final TestContext testContext;
+    private final PageContext pageContext;
 
-    public LoginFlow(TestContext testContext) {
-        this.testContext = testContext;
+    public LoginFlow(PageContext pageContext) {
+        this.pageContext = pageContext;
     }
 
     @Step("Open Login Page")
     public void openLoginPage() {
         logger.info("Opening login page");
-        LoginPage loginPage = testContext.getPage(LoginPage.class);
+        LoginPage loginPage = pageContext.getPage(LoginPage.class);
         loginPage.open()
                 .waitUntilLoaded();
 
-        testContext.setCurrentPage(LoginPage.class);
+        pageContext.setCurrentPage(LoginPage.class);
         logger.info("Login page opened successfully");
     }
 
-    @Step("Login with username '{username}'")
-    public InventoryPage submitValidCredentials(String username, String password) {
-        logger.info("Starting valid login flow with username: {}", username);
-        LoginPage loginPage = testContext.getCurrentPage(LoginPage.class);
+    @Step("Login with valid credentials for user '{user.username}'")
+    public void login(DemoUser user) {
+        logger.info("Starting valid login flow with username: {}", user.getUsername());
+        LoginPage loginPage = pageContext.getCurrentPage(LoginPage.class);
 
-        loginPage.enterUsername(username)
-                .enterPassword(password)
+        loginPage.enterUsername(user.getUsername())
+                .enterPassword(user.getPassword())
                 .submitLoginForm();
 
-        InventoryPage inventoryPage = testContext.getPage(InventoryPage.class);
-        inventoryPage.waitUntilLoaded();
-        testContext.setCurrentPage(InventoryPage.class);
-        logger.info("Login flow executed successfully");
+        if(pageContext.getPage(ProductCatalogPage.class).isOpen()){
+            pageContext.setCurrentPage(ProductCatalogPage.class);
+            logger.info("Login flow executed successfully");
+            return;
+        }
 
-        return inventoryPage;
+        if(pageContext.getPage(LoginPage.class).isOpen()){
+            pageContext.setCurrentPage(LoginPage.class);
+            logger.info("Login flow executed but login page is still open, likely due to invalid credentials or locked out account");
+        }
     }
 
     @Step("Login with invalid credentials username '{username}'")
-    public LoginPage submitInvalidCredentials(String username, String password) {
+    public void login(String username, String password) {
         logger.info("Starting invalid login flow with username: {}", username);
-        LoginPage loginPage = testContext.getCurrentPage(LoginPage.class);
+        LoginPage loginPage = pageContext.getCurrentPage(LoginPage.class);
         loginPage.enterUsername(username)
                 .enterPassword(password)
                 .submitLoginForm();
 
         loginPage.waitUntilLoaded();
-        testContext.setCurrentPage(LoginPage.class);
+        pageContext.setCurrentPage(LoginPage.class);
 
         logger.info("Invalid login flow executed successfully");
-        return loginPage;
     }
 
 }

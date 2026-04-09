@@ -26,6 +26,19 @@ public abstract class BasePage {
 
     protected abstract By getDistinctiveElementToCheckIfPageIsLoaded();
 
+    public boolean isOpen() {
+        logger.debug("Checking if page {} is open", this.getClass().getSimpleName());
+        By distinctiveElement = getDistinctiveElementToCheckIfPageIsLoaded();
+        try {
+            find(distinctiveElement);
+            logger.debug("Page {} is open", this.getClass().getSimpleName());
+            return true;
+        } catch (TimeoutException e) {
+            logger.warn("Page {} is not open - distinctive element {} not found", this.getClass().getSimpleName(), distinctiveElement);
+            return false;
+        }
+    }
+
     public BasePage waitUntilLoaded() {
         By distinctiveElement = getDistinctiveElementToCheckIfPageIsLoaded();
         try {
