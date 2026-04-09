@@ -1,27 +1,73 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="WARN">
+
+    <Properties>
+        <!-- Pattern comun -->
+        <Property name="pattern">
+            %d{yyyy-MM-dd HH:mm:ss.SSS} [%t][%X{scenario}] [%-5level] %c{1} - %msg%n
+        </Property>
+
+        <!-- Global log dir -->
+        <Property name="logDir">target/logs</Property>
+    </Properties>
+
     <Appenders>
-        <Console name="Console" target="SYSTEM_OUT">
-            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+        <!-- ========================= -->
+        <!-- Console -->
+        <!-- ========================= -->
+        <Console name="ConsoleAppender" target="SYSTEM_OUT">
+            <PatternLayout pattern="${pattern}"/>
         </Console>
-        <RollingFile name="RollingFile" fileName="logs/test-automation.log"
-                     filePattern="logs/test-automation-%d{yyyy-MM-dd}-%i.log.gz">
-            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] [%X{scenario}] [%-5level] %logger{36} - %msg%n"/>
+
+        <!-- ========================= -->
+        <!-- GLOBAL LOG (Rolling) -->
+        <!-- ========================= -->
+        <RollingFile name="GlobalRollingFileAppender"
+                     fileName="${logDir}/framework.log"
+                     filePattern="${logDir}/archive/framework-%d{yyyy-MM-dd}-%i.log.gz">
+
+            <PatternLayout pattern="${pattern}"/>
+
             <Policies>
-                <TimeBasedTriggeringPolicy />
+                <!-- daily rolloved -->
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+                <!-- file dimension rollover -->
                 <SizeBasedTriggeringPolicy size="10 MB"/>
             </Policies>
+
+            <!-- number of archived logs -->
             <DefaultRolloverStrategy max="10"/>
         </RollingFile>
+
+
+        <!-- ========================= -->
+        <!-- PER SCENARIO LOG -->
+        <!-- ========================= -->
+        <Routing name="ScenarioRoutingAppender">
+
+            <Routes pattern="$${ctx:scenarioDir}">
+
+                <Route>
+                    <File name="ScenarioFileAppender"
+                          fileName="${ctx:scenarioDir}/scenario.log">
+                        <PatternLayout pattern="${pattern}"/>
+                    </File>
+                </Route>
+
+            </Routes>
+        </Routing>
     </Appenders>
     <Loggers>
+        <!-- Framework logger-->
         <Logger name="com.emanueltuca.automation" level="INFO" additivity="false">
-            <AppenderRef ref="Console"/>
-            <AppenderRef ref="RollingFile"/>
+            <AppenderRef ref="ConsoleAppender"/>
+            <AppenderRef ref="GlobalRollingFileAppender"/>
+            <AppenderRef ref="ScenarioRoutingAppender"/>
         </Logger>
         <Root level="INFO">
-            <AppenderRef ref="Console"/>
-            <AppenderRef ref="RollingFile"/>
+            <AppenderRef ref="ConsoleAppender"/>
+            <AppenderRef ref="GlobalRollingFileAppender"/>
+            <AppenderRef ref="ScenarioRoutingAppender"/>
         </Root>
     </Loggers>
 </Configuration>

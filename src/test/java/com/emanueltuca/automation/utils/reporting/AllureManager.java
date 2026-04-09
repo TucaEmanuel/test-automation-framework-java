@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
@@ -28,18 +29,18 @@ public class AllureManager {
 
     /**
      * -- GETTER --
-     *  Check if Allure Manager is initialized
+     * Check if Allure Manager is initialized
      */
     @Getter
     private static boolean initialized = false;
 
     /**
      * Initialize Allure reporting setup
-     * Call this method in @Before hook to setup environment and categories
+     * Call this method in @Before hook to set up environment and categories
      */
     public static void initialize() {
         if (!initialized) {
-            logger.info("Initializing Allure Manager");
+            logger.debug("Initializing Allure Manager");
             setupEnvironment();
             writeCategories();
             initialized = true;
@@ -64,16 +65,48 @@ public class AllureManager {
         });
     }
 
-    /**
-     * Attach screenshot to Allure report
-     * Convenience method that delegates to AllureReportUtils
-     */
-    public static void attachScreenshot(String name, byte[] screenshot) {
-        AllureReportUtils.attachScreenshot(name, screenshot);
+    public static void attachScreenshot(String attachmentName, byte[] screenshot) {
+        AllureReportUtils.attachScreenshot(attachmentName, screenshot);
     }
 
-    public static void attachText(String name, byte[] textContent) {
+    public static void attachHtml(String name, String htmlContent) {
+        AllureReportUtils.attachHtml(name, htmlContent);
+    }
+
+    public static boolean attachHtmlFile(String attachmentName, Path htmlFile) {
+        try {
+            String htmlContent = Files.readString(htmlFile);
+            AllureReportUtils.attachHtml(attachmentName, htmlContent);
+            return true;
+        } catch (IOException e) {
+            logger.error("Error reading html file at {}", htmlFile.toAbsolutePath());
+            return false;
+        }
+    }
+
+    public static void attachText(String name, String textContent) {
         AllureReportUtils.attachText(name, textContent);
+    }
+
+
+    public static boolean attachTextFile(String attachmentName, Path textFile) {
+        try {
+            String textContent = Files.readString(textFile);
+            AllureReportUtils.attachText(attachmentName, textContent);
+            return true;
+        } catch (IOException e) {
+            logger.error("Error reading text file at {}", textFile.toAbsolutePath());
+            return false;
+        }
+    }
+
+    public static void attachLogFile(String attachmentName, Path logFile) {
+        try {
+            String logFileContent = Files.readString(logFile);
+            AllureReportUtils.attachLog(attachmentName, logFileContent);
+        } catch (IOException e) {
+            logger.error("Error reading log file at {}", logFile.toAbsolutePath());
+        }
     }
 
     /**
@@ -131,9 +164,9 @@ public class AllureManager {
             try (FileWriter writer = new FileWriter(envFile)) {
                 for (Map.Entry<String, String> entry : environmentInfo.entrySet()) {
                     writer.append(entry.getKey())
-                           .append("=")
-                           .append(entry.getValue())
-                           .append("\n");
+                            .append("=")
+                            .append(entry.getValue())
+                            .append("\n");
                 }
             }
             logger.debug("Environment properties written to: {}", envFile.getAbsolutePath());
@@ -152,34 +185,34 @@ public class AllureManager {
         // This backup ensures categories exist at runtime even if needed
         // Primary source: src/test/resources/categories.json (auto-detected by Allure)
         String json = """
-        [
-          {
-            "name": "Assertion Failures",
-            "matchedStatuses": ["failed"],
-            "messageRegex": ".*Assertion.*"
-          },
-          {
-            "name": "Element Not Found",
-            "matchedStatuses": ["failed"],
-            "traceRegex": ".*NoSuchElementException.*"
-          },
-          {
-            "name": "Timeout Issues",
-            "matchedStatuses": ["failed"],
-            "traceRegex": ".*TimeoutException.*"
-          },
-          {
-            "name": "Login Failures",
-            "matchedStatuses": ["failed"],
-            "messageRegex": ".*login.*"
-          },
-          {
-            "name": "Network Issues",
-            "matchedStatuses": ["failed"],
-            "traceRegex": ".*ConnectException.*"
-          }
-        ]
-        """;
+                [
+                  {
+                    "name": "Assertion Failures",
+                    "matchedStatuses": ["failed"],
+                    "messageRegex": ".*Assertion.*"
+                  },
+                  {
+                    "name": "Element Not Found",
+                    "matchedStatuses": ["failed"],
+                    "traceRegex": ".*NoSuchElementException.*"
+                  },
+                  {
+                    "name": "Timeout Issues",
+                    "matchedStatuses": ["failed"],
+                    "traceRegex": ".*TimeoutException.*"
+                  },
+                  {
+                    "name": "Login Failures",
+                    "matchedStatuses": ["failed"],
+                    "messageRegex": ".*login.*"
+                  },
+                  {
+                    "name": "Network Issues",
+                    "matchedStatuses": ["failed"],
+                    "traceRegex": ".*ConnectException.*"
+                  }
+                ]
+                """;
 
         try {
             File file = new File(ALLURE_RESULTS_DIR, CATEGORIES_FILE);
@@ -256,13 +289,5 @@ public class AllureManager {
             return value;
         }
         return defaultValue;
-    }
-
-    /**
-     * Reset initialization state (useful for testing)
-     */
-    public static void reset() {
-        initialized = false;
-        logger.info("Allure Manager reset");
     }
 }

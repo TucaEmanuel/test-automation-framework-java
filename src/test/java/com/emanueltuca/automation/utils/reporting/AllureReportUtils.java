@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayInputStream;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Allure Reporting Utilities - Helper methods for Allure integration
@@ -23,18 +24,30 @@ public class AllureReportUtils {
         }
     }
 
-    public static void attachText(String textTitle, byte[] textContentAsByteArray) {
+    public static void attachText(String textTitle, String textContent) {
         try {
-            Allure.addAttachment(textTitle, "text/plain", new ByteArrayInputStream(textContentAsByteArray), ".txt");
+            Allure.addAttachment(textTitle, "text/plain", textContent, ".txt");
             logger.debug("Text attached to Allure: {}", textTitle);
         } catch (Exception e) {
             logger.error("Failed to attach text to Allure", e);
         }
     }
 
+    public static void attachHtml(String htmlTitle, String htmlContent) {
+        try {
+            Allure.addAttachment(htmlTitle, "text/html", htmlContent, ".html");
+            logger.debug("Html attached to Allure: {}", htmlTitle);
+        } catch (Exception e) {
+            logger.error("Failed to attach html to Allure", e);
+        }
+    }
+
     public static void attachLog(String logName, String content) {
         try {
-            Allure.addAttachment(logName, "text/plain", content);
+            Allure.addAttachment(logName,
+                    "text/plain",
+                    new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8)),
+                    ".log");
             logger.debug("Log attached to Allure: {}", logName);
         } catch (Exception e) {
             logger.error("Failed to attach log to Allure", e);

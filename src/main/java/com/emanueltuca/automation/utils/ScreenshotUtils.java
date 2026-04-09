@@ -12,12 +12,12 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Optional;
 import java.util.UUID;
 
 public final class ScreenshotUtils {
     private static final Logger logger = LoggerFactory.getLogger(ScreenshotUtils.class);
 
-    private static final String SCREENSHOTS_DIR = "target/screenshots";
     private static final DateTimeFormatter FORMATTER =
             DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss_SSS");
 
@@ -36,32 +36,29 @@ public final class ScreenshotUtils {
         return screenshot;
     }
 
-    public static String saveScreenshot(byte[] screenshotBytes, String scenarioName) {
-        logger.info("Saving screenshot for scenario: {}", scenarioName);
+    public static Optional<String> saveScreenshot(byte[] screenshotBytes, String scenarioName, Path screenshotPath) {
+        logger.debug("Saving screenshot for scenario: {}", scenarioName);
         try {
-            Path screenshotsPath = Paths.get(SCREENSHOTS_DIR);
-            logger.debug("Creating screenshots directory: {}", screenshotsPath.toAbsolutePath());
-            Files.createDirectories(screenshotsPath);
-
             String safeScenarioName = scenarioName
                     .replaceAll("[^a-zA-Z0-9-_]", "_")
                     .replaceAll("_+", "_");
 
             String fileName = safeScenarioName + "_T" +
                     Thread.currentThread().getId() + "_" +
-                    LocalDateTime.now().format(FORMATTER) + "_" +
-                    UUID.randomUUID() + ".png";
+                    LocalDateTime.now().format(FORMATTER) + ".png";
 
-            Path destination = screenshotsPath.resolve(fileName);
+            Path destination = screenshotPath.resolve(fileName);
             logger.debug("Writing screenshot to: {}", destination.toAbsolutePath());
+
+            Files.createDirectories(destination.getParent());
             Files.write(destination, screenshotBytes);
 
             String absolutePath = destination.toAbsolutePath().toString();
-            logger.info("Screenshot saved successfully at: {}", absolutePath);
-            return absolutePath;
+            logger.debug("Screenshot saved successfully at: {}", absolutePath);
+            return Optional.of(absolutePath);
         } catch (IOException e) {
             logger.error("Failed to save screenshot for scenario: {}", scenarioName, e);
-            throw new RuntimeException("Failed to save screenshot for scenario: " + scenarioName, e);
+            return Optional.empty();
         }
     }
 }
