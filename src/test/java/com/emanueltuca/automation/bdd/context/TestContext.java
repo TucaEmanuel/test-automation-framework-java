@@ -12,7 +12,6 @@ public class TestContext {
     private BasePage currentPage;
 
     public TestContext() {
-        logger.info("Initializing Test Context");
         this.pageManager = new PageManager();
         currentPage = null;
     }
