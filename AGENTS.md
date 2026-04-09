@@ -176,7 +176,7 @@ public void tearDown(Scenario scenario) {
     if (scenario.isFailed()) {
         // Take and attach screenshot
     }
-    testContext.cleanup();  // Reset currentPage
+    pageContext.cleanup();  // Reset currentPage
     DriverFactory.quitDriver();
 }
 ```
