@@ -8,7 +8,7 @@
 [![Maven](https://img.shields.io/badge/Maven-3.6+-C71A36?style=for-the-badge&logo=apache-maven&logoColor=white)](https://maven.apache.org/)
 [![AspectJ](https://img.shields.io/badge/AspectJ-1.9.25.1-00A3FF?style=for-the-badge&logo=aspectj&logoColor=white)](https://www.eclipse.org/aspectj/)
 
-> **Production-Ready Test Automation Framework** demonstrating advanced QA engineering skills with enterprise-grade architecture, thread-safe parallel execution, and professional Allure reporting.
+Demo UI test automation framework built as a QA Engineer portfolio project demonstrating advanced QA engineering skills with enterprise-grade architecture, thread-safe parallel execution, and professional Allure reporting.
 
 ---
 
@@ -16,15 +16,14 @@
 
 ### **Core Automation Competencies**
 - ✅ **Selenium WebDriver 4** - Advanced browser automation with modern APIs
-- ✅ **Page Object Model (POM)** - Scalable UI automation with fluent interfaces  
+- ✅ **Page Object Model (POM)** - Scalable UI automation with fluent interfaces
 - ✅ **BDD with Cucumber** - Behavior-driven development and Gherkin scenarios
 - ✅ **Test-Driven Development** - Comprehensive test coverage and validation layers
 
 ### **Advanced Technical Skills**
 - ✅ **Thread-Safe Architecture** - Concurrent execution with ThreadLocal and synchronized blocks
-- ✅ **Performance Optimization** - 3.4x speedup with parallel execution (120s → 35s with 4 threads)
 - ✅ **Enterprise Patterns** - Dependency injection, layered architecture, design patterns
-- ✅ **CI/CD Integration** - Jenkins, GitHub Actions, Docker pipeline examples
+- ✅ **CI/CD Integration** - Jenkins - to be implemented
 
 ### **Quality Assurance Expertise**
 - ✅ **Comprehensive Logging** - SLF4J + Log4j 2 with structured logging levels
@@ -33,22 +32,19 @@
 - ✅ **Configuration Management** - System property overrides and environment handling
 
 ### ⚡ **Performance & Scalability**
-- ✅ **Parallel Execution** - 3.4x faster with 4 threads (120s → 35s)
+- ✅ **Parallel Execution**
 - ✅ **Thread-Safe Cache** - HashMap for page objects (isolation-based)
 - ✅ **Memory Efficiency** - Lazy loading and intelligent caching
-- ✅ **CPU Optimization** - Lock-free concurrent reads
-- ✅ **Scalable** - Supports 1-16+ concurrent test threads
 
 ### ✨ **Allure Reports Integration** ✨
 - ✅ **Professional HTML Reports** - Auto-generated with step execution
 - ✅ **Environment Information** - Browser, OS, Java version captured
-- ✅ **Screenshot Capture** - Automatic on test failure  
+- ✅ **Screenshot Capture** - Automatic on test failure
 - ✅ **Step Categorization** - @Step annotations in Flows with Allure
 - ✅ **Test Categorization** - Features, stories, severity levels
 - ✅ **Centralized Management** - AllureManager + AllureReportUtils
 
 <img width="637" height="572" alt="image" src="https://github.com/user-attachments/assets/25c8c507-2034-4958-b68f-50ed2a32b571" />
-<img width="1912" height="886" alt="image" src="https://github.com/user-attachments/assets/47c3f90f-5909-4e5d-9fee-331923a68cc7" />
 
 ---
 
@@ -78,7 +74,6 @@
         📸 SCREENSHOTS (Automatic Failure Capture)
             📋 ENVIRONMENT INFO (System Context)
 ```
-
 ### **Design Patterns Implemented**
 | Pattern | Implementation | Benefit |
 |---------|----------------|---------|
@@ -90,27 +85,6 @@
 | **Decorator Pattern** | Allure @Step annotations | Enhanced reporting without code changes |
 
 ---
-
-## ⚡ **Performance & Scalability**
-
-### **Parallel Execution Results**
-```
-Sequential Execution: 120 seconds (12 tests × 10s each)
-Parallel Execution:   35 seconds (4 threads) → 3.4x faster
-Maximum Scalability:  20 seconds (8 threads) → 6x faster
-```
-
-### **Thread-Safety Guarantees**
-- ✅ **Zero Race Conditions** - Atomic operations with synchronized blocks
-- ✅ **Isolated Test Contexts** - Each test thread has dedicated state
-- ✅ **HashMap Page Caching** - No shared state between threads
-- ✅ **Browser Instance Isolation** - ThreadLocal WebDriver management
-
-### **Resource Optimization**
-- ✅ **Memory Efficient** - Lazy loading and intelligent caching
-- ✅ **CPU Utilization** - Parallel processing maximizes hardware usage
-- ✅ **Failure Recovery** - Automatic cleanup and resource management
-- ✅ **Scalable Architecture** - Supports 1-16+ concurrent test threads
 
 ---
 
@@ -152,6 +126,7 @@ Maximum Scalability:  20 seconds (8 threads) → 6x faster
     ├── Java: 17.0.8
     └── Framework: JUnit 5.11.0
 ```
+<img width="1912" height="886" alt="image" src="https://github.com/user-attachments/assets/47c3f90f-5909-4e5d-9fee-331923a68cc7" />
 
 ---
 
@@ -177,160 +152,6 @@ Maximum Scalability:  20 seconds (8 threads) → 6x faster
 - ✅ **Allure Configuration** - Report generation settings
 
 ---
-
-## 🚀 **Quick Start Guide**
-
-### **Prerequisites**
-- ☕ **Java 17** (OpenJDK or Oracle JDK)
-- 📦 **Maven 3.6+**
-- 🌐 **Chrome** or **Firefox** browser
-- 📊 **Allure CLI** (for reports)
-
-### **Installation & Setup**
-```bash
-# 1. Install Allure CLI
-choco install allure  # Windows
-# OR
-brew install allure   # macOS
-
-# 2. Verify installation
-allure --version
-
-# 3. Clone and build
-git clone <repository-url>
-cd test-automation-framework-java
-mvn clean compile
-```
-
-### **Execute Tests**
-```bash
-# Sequential execution
-mvn clean test
-
-# Parallel execution (3.4x faster)
-mvn clean test -Djunit.jupiter.execution.parallel.enabled=true
-
-# Cross-browser testing
-mvn clean test -Ddriver=firefox -Dheadless=true
-
-# Combined execution
-mvn clean test -Djunit.jupiter.execution.parallel.enabled=true \
-               -Ddriver=chrome -Dheadless=true \
-               -Djunit.jupiter.execution.parallel.config.fixed.parallelism=4
-```
-
-### **Generate Professional Reports**
-```bash
-# One-command execution + reporting
-mvn clean test && allure generate target/allure-results \
-                      -o target/allure-report --clean && \
-                      allure open target/allure-report
-
-# View existing reports
-allure open target/allure-report
-```
-
----
-
-## 📈 **CI/CD Pipeline Integration**
-
-### **Jenkins Pipeline**
-```groovy
-pipeline {
-    agent any
-    stages {
-        stage('Parallel Test Execution') {
-            steps {
-                sh 'mvn clean test -Djunit.jupiter.execution.parallel.enabled=true'
-            }
-        }
-        stage('Generate Allure Report') {
-            steps {
-                sh 'allure generate target/allure-results -o target/allure-report --clean'
-                publishHTML target: [
-                    reportDir: 'target/allure-report',
-                    reportFiles: 'index.html',
-                    reportName: 'Allure Test Report'
-                ]
-            }
-        }
-    }
-    post {
-        always {
-            archiveArtifacts artifacts: 'target/allure-report/**', allowEmptyArchive: true
-        }
-    }
-}
-```
-
-### **GitHub Actions Workflow**
-```yaml
-name: QA Automation Pipeline
-on: [push, pull_request]
-
-jobs:
-  test-automation:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-java@v4
-        with:
-          java-version: '17'
-          distribution: 'temurin'
-
-      - name: Install Allure CLI
-        run: |
-          wget https://github.com/allure-framework/allure2/releases/download/2.25.0/allure_2.25.0-1_all.deb
-          sudo dpkg -i allure_2.25.0-1_all.deb
-
-      - name: Execute Parallel Tests
-        run: mvn clean test -Djunit.jupiter.execution.parallel.enabled=true
-
-      - name: Generate Allure Report
-        run: allure generate target/allure-results -o target/allure-report --clean
-
-      - name: Upload Test Reports
-        uses: actions/upload-artifact@v4
-        with:
-          name: allure-report
-          path: target/allure-report/
-```
-
----
-
-## 🎯 **Key Achievements & Metrics**
-
-### **Performance Metrics**
-- ⚡ **3.4x Speed Improvement** - Parallel execution vs sequential
-- 🧵 **Thread-Safe Architecture** - Zero race conditions in parallel execution
-- 📊 **100% Test Isolation** - Each test thread has dedicated resources
-- 🔄 **Automatic Resource Management** - Cleanup and memory optimization
-
-### **Code Quality Metrics**
-- 📏 **Layered Architecture** - 6 distinct architectural layers
-- 🏭 **Factory Patterns** - Efficient object lifecycle management
-- 🎨 **Fluent Interfaces** - Readable and maintainable API design
-- 📝 **Comprehensive Documentation** - 95+ KB of technical documentation
-
-### **Enterprise Features**
-- 🏢 **Production-Ready** - Suitable for enterprise environments
-- 🔧 **Configurable** - System property overrides for all settings
-- 📈 **Scalable** - Supports 1-16+ concurrent test threads
-- 🔄 **CI/CD Ready** - Pipeline examples for major platforms
-
----
-
-## 📚 **Technical Documentation**
-
-### **Framework Guides**
-| Document | Focus Area | Key Content |
-|----------|------------|-------------|
-| `README.md` | Framework Overview | Architecture, Features, Quick Start |
-| `AGENTS.md` | AI Agent Guidelines | Patterns, Conventions, Best Practices |
-| `THREAD_SAFETY.md` | Parallel Execution | Thread-Safety, Concurrency, Performance |
-| `ALLURE_REPORTS_GUIDE.md` | Professional Reporting | Allure Setup, CI/CD, Troubleshooting |
-| `ALLURE_QUICK_START.md` | Quick Reference | Commands, Examples, Cheat Sheet |
-
 ### **Architecture & Design Patterns**
 - **Page Object Model** - Fluent interfaces, method chaining, maintainability
 - **TestContext Pattern** - State management with thread-safe navigation through isolation
@@ -411,21 +232,392 @@ This framework demonstrates advanced QA engineering capabilities suitable for:
 
 ---
 
-## 🎯 **Ready for Production Use**
 
-This framework represents a **complete QA automation solution** demonstrating:
+## Current Status
+The current implementation automates the SauceDemo authentication flow with Java 17, Selenium WebDriver 4, Cucumber 7, JUnit Platform, Maven, Log4j 2, and Allure Reports. The framework is intentionally structured to demonstrate maintainable BDD test automation, layered execution, centralized page management, browser configuration, and practical failure diagnostics.
 
-✅ **Enterprise-Grade Architecture**  
-✅ **Production-Ready Code Quality**  
-✅ **Comprehensive Documentation**  
-✅ **CI/CD Pipeline Integration**  
-✅ **Professional Reporting Suite**  
-✅ **Performance & Scalability**  
-✅ **Cross-Browser Compatibility**  
-✅ **Thread-Safe Parallel Execution**  
+This project is implemented as a working demo framework, not as a full end-to-end test suite for the entire SauceDemo application.
 
-**Framework Status: PRODUCTION READY** 🚀
+Implemented:
 
----
+| Area | Current implementation |
+| --- | --- |
+| Test scope | SauceDemo authentication scenarios and product catalog access verification |
+| BDD | Cucumber feature file, step definitions, scenario outlines, tags, and custom `@ParameterType` mappings |
+| Execution architecture | Feature -> Step definitions -> Flows -> Assertions/Page objects -> Selenium actions |
+| Page objects | Fluent Page Object Model using `BasePage`, `LoginPage`, and `ProductCatalogPage` |
+| Browser management | `DriverFactory` with Chrome/Firefox support, headless mode, `BrowserOptions`, WebDriverManager, and `ThreadLocal<WebDriver>` |
+| Context management | PicoContainer-injected `PageContext` and `TestContext` per scenario |
+| Page management | Reflection-based `PageManager` with lazy page creation and per-context page cache |
+| Logging | Global framework log and per-scenario log files via Log4j 2 routing |
+| Failure artifacts | Screenshot, `context.txt`, and `page-source.html` for failed scenarios |
+| Reporting | Allure result generation, Allure attachments, environment metadata, categories, and Cucumber JSON output |
+| Output structure | Runtime artifacts organized under `target/execution-output` |
 
-*Built with passion for quality assurance and automated testing excellence*
+Partially implemented or prepared:
+
+| Area | Current state |
+| --- | --- |
+| Parallel execution | The framework is designed for scenario isolation through `ThreadLocal<WebDriver>`, PicoContainer contexts, and per-scenario output directories. Parallel execution is not enabled by default in committed configuration. |
+| Allure labels | Feature and Cucumber tags are added. Utility methods for severity, story, JSON, text, HTML, and log attachments exist, but not all are used by current scenarios. |
+| Navigation utilities | `WindowManager` exists for browser navigation/tab switching, but current tests do not need it. |
+| Product catalog coverage | The catalog page is only validated as the landing page after successful login. Product sorting, cart, checkout, and logout flows are not implemented yet. |
+
+Not implemented yet:
+
+- CI/CD pipeline files such as GitHub Actions or Jenkinsfile.
+- Selenium Grid, remote browser execution, or Dockerized browser execution.
+- Retry/rerun mechanism for flaky scenarios.
+- External test data management through JSON, CSV, database, or API.
+- Screenshots for passed scenarios.
+- Full SauceDemo business flow coverage beyond authentication.
+- Persisted Allure history/trend reporting between test runs.
+
+## Execution Architecture
+
+The framework uses a layered BDD execution model:
+
+```text
+src/test/resources/features/Authentication.feature
+    -> Step definitions
+       LoginSteps / ProductCatalogSteps / ParameterTypes
+        -> Flow layer
+           LoginFlow
+            -> Assertion layer
+               LoginAssertions / CatalogAssertions
+            -> Page state
+               PageContext + TestContext
+            -> Page object layer
+               LoginPage / ProductCatalogPage
+                -> BasePage
+                   Selenium WebDriver actions and explicit waits
+```
+
+The main flow is:
+
+1. Cucumber reads the Gherkin scenario from `Authentication.feature`.
+2. Step definitions translate business-readable steps into framework calls.
+3. `@ParameterType` methods convert readable values such as `standard` or `account is locked` into strongly typed enums.
+4. `LoginFlow` orchestrates user actions and page transitions.
+5. Assertions validate the expected page state or error message.
+6. Page objects expose fluent page actions such as `open()`, `enterUsername()`, and `enterPassword()`.
+7. `BasePage` performs Selenium operations with explicit waits.
+8. `DriverFactory` provides the browser instance for the current execution thread.
+
+## BDD Test Structure
+
+The implemented feature is:
+
+```text
+src/test/resources/features/Authentication.feature
+```
+
+It contains:
+
+- A `Background` that opens the authentication page before every scenario.
+- One happy-path scenario for a standard user.
+- One negative scenario for a locked-out user.
+- Scenario outlines for invalid credentials and missing required fields.
+- Tags such as `@login`, `@happy-path`, `@negative`, and `@validation`.
+
+Custom Cucumber parameter types are implemented in:
+
+```text
+src/test/java/com/emanueltuca/automation/bdd/stepdefinitions/ParameterTypes.java
+```
+
+Implemented parameter conversions:
+
+| Parameter type | Example text | Java type |
+| --- | --- | --- |
+| `{demoUser}` | `standard`, `locked out`, `problem` | `DemoUser` |
+| `{loginError}` | `account is locked`, `credentials are invalid`, `username is required`, `password is required` | `LoginErrorMessage` |
+
+This keeps feature files readable while avoiding hard-coded credentials and expected messages inside the step definitions.
+
+## Context And Page Management
+
+Current context responsibilities are intentionally separated:
+
+| Class | Responsibility |
+| --- | --- |
+| `TestContext` | Stores scenario test data such as the selected `DemoUser`, username, and password |
+| `PageContext` | Stores the current active page and owns the `PageManager` |
+| `ExecutionContext` | Creates the run output directory, scenario output directory, and Log4j thread context values |
+| `PageManager` | Lazily creates and caches page objects for the current scenario context |
+
+`PageManager` creates page objects by reflection:
+
+```text
+pageClass.getDeclaredConstructor(WebDriver.class).newInstance(driver)
+```
+
+The cache is a regular `HashMap` because it is owned by a scenario-specific `PageContext`. It is not shared globally between scenarios. This design supports parallel execution by isolation instead of shared synchronization.
+
+## Driver Factory And Browser Options
+
+Browser lifecycle is centralized in:
+
+```text
+src/main/java/com/emanueltuca/automation/core/driver/DriverFactory.java
+src/main/java/com/emanueltuca/automation/core/driver/BrowserOptions.java
+```
+
+Implemented behavior:
+
+- Uses `ThreadLocal<WebDriver>` so each execution thread can own its own browser.
+- Supports Chrome and Firefox.
+- Uses WebDriverManager to resolve browser drivers.
+- Applies browser-specific options in `BrowserOptions`.
+- Supports headless and visible browser execution.
+- Disables implicit waits and uses explicit waits through `BasePage`.
+- Applies page load timeout from configuration.
+- Quits and removes the driver in the Cucumber `@After` hook.
+
+Browser options currently include:
+
+| Browser | Options |
+| --- | --- |
+| Chrome | Incognito, disabled notifications, disabled password manager, disabled GPU, optional headless mode |
+| Firefox | Private browsing, disabled notifications, disabled geolocation popup, disabled password/autofill features, optional headless mode |
+
+Configuration file:
+
+```text
+src/main/resources/config/test.properties
+```
+
+Runtime overrides currently implemented:
+
+```bash
+mvn test -Ddriver=chrome
+mvn test -Ddriver=firefox
+mvn test -Dheadless=true
+mvn test -Dheadless=false
+```
+
+## Debugging And Reporting
+
+The debugging mechanism is implemented around logs, scenario artifacts, Allure attachments, and Cucumber JSON output.
+
+### Logging
+
+Log4j 2 configuration:
+
+```text
+src/main/resources/log4j2.xml
+```
+
+Generated logs:
+
+| Output | Purpose |
+| --- | --- |
+| `target/logs/framework.log` | Full framework execution log |
+| `target/execution-output/<run-id>/<scenario-folder>/scenario.log` | Log file scoped to one scenario |
+| Console output | Live execution feedback |
+
+Per-scenario logging is implemented through Log4j `RoutingAppender` and `ThreadContext`. `ExecutionContext.initialize()` sets the scenario output directory before the browser starts.
+
+### Failure Artifacts
+
+For failed scenarios, the `@After` hook creates:
+
+| Artifact | Content |
+| --- | --- |
+| Screenshot PNG | Browser screenshot at failure time |
+| `context.txt` | Scenario name, status, current URL, page title, and thread id |
+| `page-source.html` | Browser page source at failure time |
+| `scenario.log` | Scenario-specific execution log |
+
+The same failure artifacts are attached to Allure where applicable:
+
+- Failure screenshot as `image/png`.
+- Failure context as text.
+- Page source as HTML.
+- Scenario log as log attachment.
+
+### Allure Reporting
+
+Allure integration is configured through:
+
+```text
+src/test/resources/junit-platform.properties
+src/test/resources/allure.properties
+src/test/java/com/emanueltuca/automation/utils/reporting/AllureManager.java
+src/test/java/com/emanueltuca/automation/utils/reporting/AllureReportUtils.java
+```
+
+Implemented Allure behavior:
+
+- Uses `io.qameta.allure.cucumber7jvm.AllureCucumber7Jvm`.
+- Writes results to `target/allure-results`.
+- Adds environment metadata.
+- Writes categories for common failure types.
+- Adds feature and tag metadata for scenarios.
+- Uses `@Step` annotations in `LoginFlow`.
+- Attaches failure screenshot, context, page source, and scenario log.
+
+Generate and open an Allure report:
+
+```bash
+mvn clean test
+allure generate target/allure-results -o target/allure-report --clean
+allure open target/allure-report
+```
+
+### Cucumber JSON Report
+
+The Cucumber JSON reporter is enabled in:
+
+```text
+src/test/resources/junit-platform.properties
+```
+
+Generated file:
+
+```text
+target/cucumber-report.json
+```
+
+This file can be consumed by other reporting tools or CI plugins.
+
+## Runtime Output Structure
+
+After a test run, the main generated outputs are:
+
+```text
+target/
+  allure-results/
+    environment.properties
+    categories.json
+    *.json
+    *-attachment.*
+  cucumber-report.json
+  logs/
+    framework.log
+  execution-output/
+    <run-id>/
+      <scenario-name>_<timestamp>_<thread-id>/
+        scenario.log
+        context.txt          # failed scenarios only
+        page-source.html     # failed scenarios only
+        <scenario>_T<thread>_<timestamp>.png  # failed scenarios only
+```
+
+The scenario folder name is sanitized and includes a timestamp and thread id to avoid collisions during repeated or parallel executions.
+
+## Running Tests
+
+Prerequisites:
+
+- Java 17.
+- Maven.
+- Chrome or Firefox installed locally.
+- Allure CLI installed only if you want to generate/open the HTML report locally.
+
+Compile:
+
+```bash
+mvn clean compile
+```
+
+Run all tests:
+
+```bash
+mvn clean test
+```
+
+Run with a specific browser:
+
+```bash
+mvn clean test -Ddriver=chrome
+mvn clean test -Ddriver=firefox
+```
+
+Run with visible browser window:
+
+```bash
+mvn clean test -Dheadless=false
+```
+
+Run with Cucumber parallel execution enabled:
+
+```bash
+mvn clean test -Dcucumber.execution.parallel.enabled=true -Dcucumber.execution.parallel.config.strategy=fixed -Dcucumber.execution.parallel.config.fixed.parallelism=4
+```
+
+Parallel execution is supported by the framework design, but it is not enabled by default in `junit-platform.properties`.
+
+## Project Structure
+
+```text
+src/
+  main/
+    java/com/emanueltuca/automation/
+      core/config/ConfigReader.java
+      core/driver/BrowserOptions.java
+      core/driver/DriverFactory.java
+      domain/DemoUser.java
+      domain/LoginErrorMessage.java
+      ui/pages/BasePage.java
+      ui/pages/LoginPage.java
+      ui/pages/ProductCatalogPage.java
+      utils/PageManager.java
+      utils/ScreenshotUtils.java
+      utils/WindowManager.java
+    resources/
+      config/test.properties
+      log4j2.xml
+  test/
+    java/com/emanueltuca/automation/
+      bdd/assertions/
+      bdd/context/
+      bdd/flows/
+      bdd/hooks/
+      bdd/runners/
+      bdd/stepdefinitions/
+      utils/reporting/
+    resources/
+      features/Authentication.feature
+      allure.properties
+      categories.json
+      junit-platform.properties
+```
+
+## Key Design Choices
+
+- No Selenium PageFactory is used. Page objects use direct `By` locators and explicit wait helpers from `BasePage`.
+- Page object methods are fluent where it improves readability.
+- Step definitions stay thin and delegate business actions to flow classes.
+- Assertions are centralized in dedicated assertion classes.
+- Browser state is isolated through `ThreadLocal<WebDriver>`.
+- Page instances are isolated through Cucumber object injection and `PageContext`.
+- Failure evidence is stored both in the filesystem and, where supported, in Allure.
+- `target/execution-output` is designed for local debugging and CI artifact archiving.
+
+## Suggested Next Improvements
+
+The next useful improvements for this demo framework would be:
+
+1. Add committed CI configuration that runs tests and archives Allure, Cucumber JSON, logs, and `execution-output`.
+2. Add Selenium Grid or remote WebDriver support.
+3. Add retry/rerun support for failed Cucumber scenarios.
+4. Expand SauceDemo coverage with cart, checkout, sorting, logout, and menu scenarios.
+5. Add external test data loading for larger scenario coverage.
+6. Persist Allure history between CI runs.
+7. Add README screenshots generated from the actual current report after a clean successful run.
+
+## Portfolio Summary
+
+This framework demonstrates practical QA automation skills:
+
+- BDD test design with Cucumber.
+- Selenium WebDriver browser automation.
+- Layered framework architecture.
+- Fluent Page Object Model implementation.
+- Scenario-scoped context and page management.
+- Cross-browser browser factory design.
+- Thread-aware browser isolation.
+- Log-driven debugging.
+- Failure artifact collection.
+- Allure and Cucumber reporting outputs.
