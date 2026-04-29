@@ -47,6 +47,9 @@
 - ✅ **Test Categorization** - Features, stories, severity levels
 - ✅ **Centralized Management** - AllureManager + AllureReportUtils
 
+<img width="637" height="572" alt="image" src="https://github.com/user-attachments/assets/25c8c507-2034-4958-b68f-50ed2a32b571" />
+<img width="1912" height="886" alt="image" src="https://github.com/user-attachments/assets/47c3f90f-5909-4e5d-9fee-331923a68cc7" />
+
 ---
 
 ## 🏗️ **Architecture Excellence**
